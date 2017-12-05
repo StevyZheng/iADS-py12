@@ -2,6 +2,7 @@
 import traceback
 import subprocess
 import re
+import os
 
 
 def try_catch(actual_do):
@@ -10,7 +11,7 @@ def try_catch(actual_do):
 			return actual_do(*args, **keyargs)
 		except:
 			print('Error execute: %s' % actual_do.__name__)
-			# traceback.print_exc()
+			traceback.print_exc()
 		return add_robust
 
 
@@ -36,10 +37,50 @@ def exe_shell(cmd):
 
 
 @try_catch
-def search_regex_string(src_str, reg, split_str, column):
-	if is_string_list([src_str, reg, split_str]):
+def search_regex_string(src_str, reg):
+	if is_string_list([src_str, reg]):
 		result = re.findall(reg, src_str)
 		return result
 	else:
 		print("src_str is not string!")
 		return None
+
+
+@try_catch
+def search_regex_string_column(src_str, reg, split_str, column):
+	if is_string_list([src_str, reg, split_str]):
+		result = re.findall(reg, src_str)
+		re_list = []
+		for line in result:
+			list_re = line.split(split_str)
+			re_list.append(list_re[column])
+		return result
+	else:
+		print("src_str is not string!")
+		return None
+	
+
+@try_catch
+def read_file(path):
+	with open(path) as f:
+		return f.read()
+
+
+@try_catch
+def list_dir_all_files(path):
+	return os.listdir(path)
+
+
+@try_catch
+def list_dir_nomal_files(path):
+	files = os.listdir(path)
+	result = []
+	for i in files:
+		file_path = os.path.join(path, i)
+		if os.path.isfile(file_path):
+			result.append(i)
+	return result
+
+
+def path_join(path1, path2):
+	return os.path.join(path1, path2)
