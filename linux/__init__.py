@@ -18,10 +18,11 @@ def try_catch(f):
 				exc_type.__name__,
 				exc_instance
 			)
-			#raise exc_type(message)
+			# raise exc_type(message)
 			print(exc_type(message))
 		finally:
 			pass
+	
 	return handle_problems
 
 
