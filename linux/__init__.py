@@ -37,7 +37,7 @@ def exe_shell(cmd):
 
 
 @try_catch
-def search_regex_string(src_str, reg):
+def search_regex_strings(src_str, reg):
 	if is_string_list([src_str, reg]):
 		result = re.findall(reg, src_str)
 		return result
@@ -47,7 +47,7 @@ def search_regex_string(src_str, reg):
 
 
 @try_catch
-def search_regex_string_column(src_str, reg, split_str, column):
+def search_regex_strings_column(src_str, reg, split_str, column):
 	if is_string_list([src_str, reg, split_str]):
 		result = re.findall(reg, src_str)
 		re_list = []
@@ -58,7 +58,13 @@ def search_regex_string_column(src_str, reg, split_str, column):
 	else:
 		print("src_str is not string!")
 		return None
-	
+
+
+@try_catch
+def get_match_sub_string(src_str, reg_str):
+	if is_string_list([src_str, reg_str]):
+		return re.search(reg_str, src_str).group(0)
+
 
 @try_catch
 def read_file(path):
@@ -72,7 +78,7 @@ def list_dir_all_files(path):
 
 
 @try_catch
-def list_dir_nomal_files(path):
+def list_dir_normal_files(path):
 	files = os.listdir(path)
 	result = []
 	for i in files:
