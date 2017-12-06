@@ -3,16 +3,26 @@ import traceback
 import subprocess
 import re
 import os
+import sys
 
 
-def try_catch(actual_do):
-	def add_robust(*args, **keyargs):
+def try_catch(f):
+	def handle_problems(*args, **kwargs):
 		try:
-			return actual_do(*args, **keyargs)
-		except:
-			print('Error execute: %s' % actual_do.__name__)
-			traceback.print_exc()
-		return add_robust
+			return f(*args, **kwargs)
+		except Exception:
+			exc_type, exc_instance, exc_traceback = sys.exc_info()
+			formatted_traceback = ''.join(traceback.format_tb(exc_traceback))
+			message = '\n{0}\n{1}:\n{2}'.format(
+				formatted_traceback,
+				exc_type.__name__,
+				exc_instance
+			)
+			#raise exc_type(message)
+			print(exc_type(message))
+		finally:
+			pass
+	return handle_problems
 
 
 def is_string(s):
@@ -31,9 +41,16 @@ def is_string_list(s):
 
 @try_catch
 def exe_shell(cmd):
-	p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
-	a = p.stdout.read()
-	return a
+	pro = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+	pro = pro.communicate()
+	if (pro[1] is None) and (pro[0] is not None):
+		return pro[0]
+	elif (pro[1] is not None) and (pro[0] is None):
+		return pro[1]
+	elif (pro[1] is not None) and (pro[0] is not None):
+		return "%s\n%s" % (pro[0], pro[1])
+	else:
+		return None
 
 
 @try_catch
@@ -49,7 +66,7 @@ def search_regex_strings(src_str, reg):
 @try_catch
 def search_regex_strings_column(src_str, reg, split_str, column):
 	if is_string_list([src_str, reg, split_str]):
-		result = re.findall(reg, src_str)
+		result = re.findall(reg, src_str, re.M)
 		re_list = []
 		for line in result:
 			list_re = line.split(split_str)

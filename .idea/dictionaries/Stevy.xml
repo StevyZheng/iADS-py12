@@ -6,6 +6,7 @@
       <w>keyargs</w>
       <w>lsblk</w>
       <w>smartx</w>
+      <w>struct</w>
     </words>
   </dictionary>
 </component>
