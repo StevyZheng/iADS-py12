@@ -20,11 +20,11 @@ class Phy:
 		phy_reset_problem_count_path = "/sys/class/sas_phy/%s/phy_reset_problem_count" % self.phy_name
 		running_disparity_error_count_path = "/sys/class/sas_phy/%s/running_disparity_error_count" % self.phy_name
 		sas_address_path = "/sys/class/sas_phy/%s/sas_address" % self.phy_name
-		self.invalid_dword_count = linux.read_file(invalid_dword_count_path)
-		self.loss_of_dword_sync_count = linux.read_file(loss_of_dword_sync_count_path)
-		self.phy_reset_problem_count = linux.read_file(phy_reset_problem_count_path)
-		self.running_disparity_error_count = linux.read_file(running_disparity_error_count_path)
-		self.sas_address = linux.read_file(sas_address_path)
+		self.invalid_dword_count = linux.read_file(invalid_dword_count_path).strip()
+		self.loss_of_dword_sync_count = linux.read_file(loss_of_dword_sync_count_path).strip()
+		self.phy_reset_problem_count = linux.read_file(phy_reset_problem_count_path).strip()
+		self.running_disparity_error_count = linux.read_file(running_disparity_error_count_path).strip()
+		self.sas_address = linux.read_file(sas_address_path).strip()
 	
 	@staticmethod
 	@try_catch
@@ -52,17 +52,51 @@ class Phy:
 					p.phy_reset_problem_count) > 0 or int(p.running_disparity_error_count) > 0:
 				phy_arr.append(p)
 		return phy_arr
-	
+
+	@staticmethod
+	@try_catch
+	def phys_to_dict():
+		phy_arr = Phy.scan_phys_attr()
+		phys_dict = {}
+		for p in phy_arr:
+			phy_dict = {
+				"phy_name": p.phy_name,
+				"sas_address": p.sas_address,
+				"invalid_dword_count": p.invalid_dword_count,
+				"loss_of_dword_sync_count": p.loss_of_dword_sync_count,
+				"phy_reset_problem_count": p.phy_reset_problem_count,
+				"running_disparity_error_count": p.running_disparity_error_count
+			}
+			phys_dict[p.phy_name] = phy_dict
+		return phys_dict
+
+	@staticmethod
+	@try_catch
+	def err_phys_to_dict():
+		phy_arr = Phy.scan_err_phys()
+		phys_dict = {}
+		for p in phy_arr:
+			phy_dict = {
+				"phy_name": p.phy_name,
+				"sas_address": p.sas_address,
+				"invalid_dword_count": p.invalid_dword_count,
+				"loss_of_dword_sync_count": p.loss_of_dword_sync_count,
+				"phy_reset_problem_count": p.phy_reset_problem_count,
+				"running_disparity_error_count": p.running_disparity_error_count
+			}
+			phys_dict[p.phy_name] = phy_dict
+		return phys_dict
+
 	@staticmethod
 	@try_catch
 	def phys_to_json():
-		phy_arr = Phy.scan_phys_attr()
-		phy_json = json.dumps(phy_arr, indent=1)
+		phys_dict = Phy.phys_to_dict()
+		phy_json = json.dumps(phys_dict, indent=1)
 		return phy_json
 
 	@staticmethod
 	@try_catch
 	def err_phys_to_json():
-		phy_arr = Phy.scan_err_phys()
-		phy_json = json.dumps(phy_arr, indent=1)
+		err_phys_dict = Phy.err_phys_to_dict()
+		phy_json = json.dumps(err_phys_dict, indent=1)
 		return phy_json

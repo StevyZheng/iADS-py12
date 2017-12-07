@@ -100,10 +100,19 @@ def get_match_sub_string(src_str, reg_str):
 		return re.search(reg_str, src_str).group(0)
 
 
-@try_catch
-def read_file(path):
-	with open(path) as f:
-		return f.read()
+def read_file(filepath):
+	s_t = ""
+	if os.path.exists(filepath) and os.path.isfile(filepath):
+		with open(filepath) as fp:
+			try:
+				s_t = fp.read()
+			except Exception:
+				print("%s is cannot read." % filepath)
+				return "-9999"
+	else:
+		print("file not exists or path is not a file!")
+		return "-9999"
+	return s_t
 
 
 @try_catch
