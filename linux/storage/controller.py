@@ -23,12 +23,13 @@ class Controller:
 			con_str = linux.search_regex_strings(sas2_con, "SAS[0-9]{4}")
 	
 	@staticmethod
-	def scan_from_sas23_disk_name_sn():
-		disks = []
-		tmp = linux.exe_shell("lsblk -o NAME,SERIAL,VENDOR")
-		names = linux.search_regex_strings_column(tmp, "^sd[a-z]+ +([a-z]|[A-Z]|[0-9]| )+", " ", 0)
-		sns = linux.search_regex_strings_column(tmp, "^sd[a-z]+ +([a-z]|[A-Z]|[0-9]| )+", " ", 1)
-		vendors = linux.search_regex_strings_column(tmp, "^sd[a-z]+ +([a-z]|[A-Z]|[0-9]| )+", " ", 2)
+	def scan_disk_name_sn():
+		disks = linux.exe_shell("ls /dev|grep -P '^sd[a-z]+$'").splitlines()
+		for d in disks:
+			smart = linux.exe_shell("smartctl -i /dev/%s" % d)
+		names = linux.search_regex_strings_column(tmp, "^sd[a-z]+ +(?:[a-z]|[A-Z]|[0-9]| )+", " ", 0)
+		sns = linux.search_regex_strings_column(tmp, "^sd[a-z]+ +(?:[a-z]|[A-Z]|[0-9]| )+", " ", 1)
+		vendors = linux.search_regex_strings_column(tmp, "^sd[a-z]+ +(?:[a-z]|[A-Z]|[0-9]| )+", " ", 2)
 		for i, e in enumerate(names):
 			attr = [
 				names[i],
