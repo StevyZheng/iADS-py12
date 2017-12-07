@@ -4,6 +4,8 @@ import subprocess
 import re
 import os
 import sys
+import shutil
+import stat
 
 
 def try_catch(f):
@@ -122,3 +124,22 @@ def list_dir_normal_files(path):
 
 def path_join(path1, path2):
 	return os.path.join(path1, path2)
+
+
+def get_main_path():
+	dir_name, file_name = os.path.split(os.path.abspath(sys.argv[0]))
+	return dir_name
+
+
+@try_catch
+def copy_tools():
+	exes = ["sas2ircu", "sas3ircu", "storcli", ]
+	main_path = get_main_path()
+	for i in exes:
+		shutil.copyfile(os.path.join(main_path, "tools/%s" % i), os.path.join("/bin", i))
+		os.chmod("/bin/%s" % i, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
+
+
+@try_catch
+def zfs_install():
+	return exe_shell("cd %s/tools && ./install_zfs.sh" % get_main_path())
