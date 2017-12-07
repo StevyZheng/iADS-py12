@@ -71,8 +71,22 @@ def search_regex_strings_column(src_str, reg, split_str, column):
 		re_list = []
 		for line in result:
 			list_re = line.split(split_str)
-			re_list.append(list_re[column])
-		return result
+			re_list.append(list_re[column].strip())
+		return re_list
+	else:
+		print("src_str is not string!")
+		return None
+
+
+@try_catch
+def search_regex_one_line_string_column(src_str, reg, split_str, column):
+	if is_string_list([src_str, reg, split_str]):
+		result = re.findall(reg, src_str, re.M)
+		if result:
+			list_re = result[0].split(split_str)
+			return list_re[column].strip()
+		else:
+			return None
 	else:
 		print("src_str is not string!")
 		return None

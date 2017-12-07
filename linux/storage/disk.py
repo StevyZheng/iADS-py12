@@ -28,11 +28,13 @@ class DiskFromLsiSas3(Disk):
 		smart_str = linux.exe_shell("smartctl -a /dev/%s" % self.dev_name)
 		smartx_str = linux.exe_shell("smartctl -x /dev/%s" % self.dev_name)
 		self.smart = smartx_str
-		self.fw = linux.search_regex_strings_column(smart_str, "Firmware|Revision.+", ":", 1)[0].strip()
-		self.vendor = linux.search_regex_strings_column(smart_str, "ATA|Vendor.+", ":", 1)[0].strip()
-		self.sn = linux.search_regex_strings_column(smart_str, "Serial (N|n)umber.+", ":", 1)[0].strip()
+		self.model = linux.search_regex_one_line_string_column(smart_str, "(?:Device Model|Product):.+", ":", 1).strip()
+		self.fw = linux.search_regex_one_line_string_column(smart_str, "(?:Firmware|Revision).+", ":", 1).strip()
+		self.vendor = linux.search_regex_one_line_string_column(smart_str, "(?:ATA|Vendor).+", ":", 1).strip()
+		self.sn = linux.search_regex_one_line_string_column(smart_str, "Serial (?:N|n)umber.+", ":", 1).strip()
 		if "SAS" in smart_str:
-			smart_str_arr = linux.search_regex_strings(smart_str, " *(write:|read:|verify:).+")
+			self.type = "SAS"
+			smart_str_arr = linux.search_regex_strings(smart_str, " *(?:write:|read:|verify:).+")
 			for line in smart_str_arr:
 				tmp = line.split()
 				dict_tmp = {
@@ -47,7 +49,7 @@ class DiskFromLsiSas3(Disk):
 				self.smart_attr[tmp[0].replace(":", " ").strip()] = dict_tmp
 			smart_str_arr = linux.search_regex_strings(
 				self.smart,
-				" +(Invalid DWORD)|(Running disparity)|(Loss of DWORD)|(Phy reset problem).+=.+"
+				"(?:Invalid DWORD|Running disparity|Loss of DWORD|Phy reset problem).+=.+"
 			)
 			i = 0
 			dict_tmp = {}
@@ -60,6 +62,7 @@ class DiskFromLsiSas3(Disk):
 					self.smart_attr["channel1Error"] = dict_tmp
 				i += 1
 		if "SATA" in smart_str:
+			self.type = "SATA"
 			dict_tmp = linux.search_regex_strings(smart_str, "^( |[0-9])+.+[0-9]+ .+0x.+(In_the_past|-|FAILING_NOW) +[0-9]+")
 			for line in dict_tmp:
 				tmp = line.split()
@@ -86,7 +89,7 @@ class DiskFromLsiSas3(Disk):
 			"vendor": self.vendor,
 			"smart": self.smart_attr,
 		}
-		json_str = json.dumps(struct)
+		json_str = json.dumps(struct, indent=1)
 		return json_str
 
 
