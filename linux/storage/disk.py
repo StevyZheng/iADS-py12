@@ -18,12 +18,12 @@ class Disk:
 
 	@staticmethod
 	@try_catch
-	def get_disk_smart_i_str(disk_name):
+	def get_from_sas_disk_smart_i_str(disk_name):
 		return linux.exe_shell("smartctl -i /dev/%s" % disk_name)
 
 	@staticmethod
-	def get_disk_simple_attr(disk_name):
-		smart = Disk.get_disk_smart_i_str(disk_name)
+	def get_from_sas_disk_simple_attr(disk_name):
+		smart = Disk.get_from_sas_disk_smart_i_str(disk_name)
 		model = linux.search_regex_one_line_string_column(smart, "(?:Device Model|Product):.+", ":", 1).strip()
 		sn = linux.search_regex_one_line_string_column(smart, "Serial (?:N|n)umber.+", ":", 1).strip()
 		vendor = linux.search_regex_one_line_string_column(smart, "(?:ATA|Vendor).+", ":", 1).strip()

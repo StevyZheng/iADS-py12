@@ -25,24 +25,16 @@ class Controller:
 	@staticmethod
 	def scan_disk_name_sn():
 		disks = linux.exe_shell("ls /dev|grep -P '^sd[a-z]+$'").splitlines()
+		disks_attr = []
 		for d in disks:
-			smart = linux.exe_shell("smartctl -i /dev/%s" % d)
-		names = linux.search_regex_strings_column(tmp, "^sd[a-z]+ +(?:[a-z]|[A-Z]|[0-9]| )+", " ", 0)
-		sns = linux.search_regex_strings_column(tmp, "^sd[a-z]+ +(?:[a-z]|[A-Z]|[0-9]| )+", " ", 1)
-		vendors = linux.search_regex_strings_column(tmp, "^sd[a-z]+ +(?:[a-z]|[A-Z]|[0-9]| )+", " ", 2)
-		for i, e in enumerate(names):
-			attr = [
-				names[i],
-				sns[i],
-				vendors[i],
-			]
-			disks.append(attr)
-		return disks
+			attr_arr = disk.Disk.get_from_sas_disk_simple_attr(d)
+			disks_attr.append(attr_arr)
+		return disks_attr
 
 
 class LsiSas2Controller(Controller):
 	def __init__(self, t_index, t_model):
-		Controller.__init__(self, t_index, t_model)
+		Controller.__init__(self)
 		if re.match('SAS[0-9]{4}', t_model):
 			self.model = t_model
 		else:
@@ -54,7 +46,7 @@ class LsiSas2Controller(Controller):
 	def fill_attrs(self):
 		sas2ircu_string = linux.exe_shell("sas2ircu %s display", self.index)
 		fw_str = linux.get_match_sub_string(sas2ircu_string, 'Firmware.*(?:[0-9]+\\.)+[0-9]*')
-		disk_name_sns = Controller.scan_from_sas23_disk_name_sn()
+		disk_name_sns = Controller.scan_disk_name_sn()
 		tmp = fw_str.split(":")
 		tmp_str = tmp[1].strip()
 		if "" != tmp_str:
@@ -68,7 +60,7 @@ class LsiSas2Controller(Controller):
 
 class LsiSas3Controller(Controller):
 	def __init__(self, t_index, t_model):
-		Controller.__init__(self, t_index, t_model)
+		Controller.__init__(self)
 		if re.match('SAS[0-9]{4}', t_model):
 			self.model = t_model
 		else:
@@ -80,7 +72,7 @@ class LsiSas3Controller(Controller):
 	def fill_attrs(self):
 		sas2ircu_string = linux.exe_shell("sas3ircu %s display", self.index)
 		fw_str = linux.get_match_sub_string(sas2ircu_string, 'Firmware.*(?:[0-9]+\\.)+[0-9]*')
-		disk_name_sns = Controller.scan_from_sas23_disk_name_sn()
+		disk_name_sns = Controller.scan_disk_name_sn()
 		tmp = fw_str.split(":")
 		tmp_str = tmp[1].strip()
 		if "" != tmp_str:
