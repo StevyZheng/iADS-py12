@@ -1,11 +1,11 @@
 # coding = utf-8
-from linux.storage.phy import Phy
+from linux.storage.disk import DiskFromLsiSas3
+from linux.storage.controller import LsiSas3Controller
 import linux
 import time
 import sys
 
-i = 1
-while True:
-	print(Phy.err_phys_to_json())
-	i += 1
-	time.sleep(60)
+
+cons = LsiSas3Controller.scan_controller()
+for i in cons:
+	print(i.model)

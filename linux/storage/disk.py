@@ -28,6 +28,7 @@ class Disk:
 		sn = linux.search_regex_one_line_string_column(smart, "Serial (?:N|n)umber.+", ":", 1).strip()
 		vendor = linux.search_regex_one_line_string_column(smart, "(?:ATA|Vendor).+", ":", 1).strip()
 		return {
+			"name": disk_name,
 			"model": model,
 			"sn": sn,
 			"vendor": vendor

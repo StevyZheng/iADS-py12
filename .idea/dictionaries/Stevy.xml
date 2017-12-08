@@ -7,8 +7,10 @@
       <w>indexs</w>
       <w>keyargs</w>
       <w>lsblk</w>
+      <w>raidz</w>
       <w>smartx</w>
       <w>struct</w>
+      <w>zpool</w>
     </words>
   </dictionary>
 </component>
