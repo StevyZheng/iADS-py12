@@ -4,12 +4,14 @@
       <w>attrs</w>
       <w>dmesg</w>
       <w>hgst</w>
+      <w>hrules</w>
       <w>indexs</w>
       <w>keyargs</w>
       <w>lsblk</w>
       <w>raidz</w>
       <w>smartx</w>
       <w>struct</w>
+      <w>vrules</w>
       <w>zpool</w>
     </words>
   </dictionary>

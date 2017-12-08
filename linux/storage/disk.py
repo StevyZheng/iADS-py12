@@ -35,8 +35,42 @@ class Disk:
 		}
 
 	@staticmethod
-	def get_sys_disks():
-		pass
+	def get_all_disk():
+		disks = []
+		disks_lines = linux.exe_shell("lsblk -o NAME,VENDOR|grep '^sd*'")
+		for line in disks_lines.splitlines():
+			disk_t = line.split()
+			if "LSI" not in disk_t[1]:
+				disks.append(disk_t[0])
+		ds = []
+		for i in disks:
+			d_t = DiskFromLsiSas3("", i)
+			d_t.fill_attrs()
+			ds.append(d_t)
+		return ds
+
+	@staticmethod
+	def __if_smart_err(disk_oj):
+		if "SAS" in disk_oj.smart_str:
+			if disk_oj.smart_attr["channel0Error"]["Invalid word count"] > 0 or \
+				disk_oj.smart_attr["channel0Error"]["Running disparity error count"] > 0 or \
+				disk_oj.smart_attr["channel0Error"]["Loss of dword synchronization count"] > 0 or \
+				disk_oj.smart_attr["channel0Error"]["Phy reset problem count"] > 0 or \
+				disk_oj.smart_attr["channel1Error"]["Invalid word count"] > 0 or \
+				disk_oj.smart_attr["channel1Error"]["Running disparity error count"] > 0 or \
+				disk_oj.smart_attr["channel1Error"]["Loss of dword synchronization count"] > 0 or \
+				disk_oj.smart_attr["channel1Error"]["Phy reset problem count"] > 0:
+				return True
+			else:
+				return False
+
+	@staticmethod
+	def get_err_disk():
+		disks = Disk.get_all_disk()
+		for i in disks:
+			if "SAS" in i.smart_str:
+				if Disk.__if_smart_err(i):
+					pass
 
 
 class DiskFromLsiSas3(Disk):

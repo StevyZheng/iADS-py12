@@ -24,7 +24,7 @@ def try_catch(f):
 			print(exc_type(message))
 		finally:
 			pass
-	
+
 	return handle_problems
 
 
@@ -107,7 +107,7 @@ def read_file(filepath):
 			try:
 				s_t = fp.read()
 			except Exception:
-				print("%s is cannot read." % filepath)
+				# print("%s is cannot read." % filepath)
 				return "-9999"
 	else:
 		print("file not exists or path is not a file!")
@@ -152,3 +152,26 @@ def copy_tools():
 @try_catch
 def zfs_install():
 	return exe_shell("cd %s/tools && ./install_zfs.sh" % get_main_path())
+
+
+@try_catch
+def pretty_dict(o_dict, o_indent=' '):
+	def _pretty(i_dict, i_indent):
+		for i, tup in enumerate(i_dict.items()):
+			k, v = tup
+			if isinstance(k, str):
+				k = '"%s"' % k
+			if isinstance(v, str):
+				v = '"%s"' % v
+			if isinstance(v, dict):
+				v = ''.join(_pretty(v, i_indent + ' ' * len(str(k) + ': {')))
+			if i == 0:
+				if len(i_dict) == 1:
+					yield '{%s: %s}' % (k, v)
+				else:
+					yield '{%s: %s,\n' % (k, v)
+			elif i == len(i_dict) - 1:
+				yield '%s%s: %s}' % (i_indent, k, v)
+			else:
+				yield '%s%s: %s,\n' % (i_indent, k, v)
+	return ''.join(_pretty(o_dict, o_indent))
