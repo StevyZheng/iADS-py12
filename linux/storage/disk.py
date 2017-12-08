@@ -34,6 +34,10 @@ class Disk:
 			"vendor": vendor
 		}
 
+	@staticmethod
+	def get_sys_disks():
+		pass
+
 
 class DiskFromLsiSas3(Disk):
 	def __init__(self, sn, name):

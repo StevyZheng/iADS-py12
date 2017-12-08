@@ -1,11 +1,13 @@
 # coding = utf-8
-from linux.storage.disk import DiskFromLsiSas3
-from linux.storage.controller import LsiSas3Controller
-import linux
-import time
-import sys
+import click
 
 
-cons = LsiSas3Controller.scan_controller()
-for i in cons:
-	print(i.model)
+@click.command()
+@click.option('--count', default=1, help='Number of greetings.')
+@click.option('--name', prompt='Your name', help='The person to greet.')
+def main(count, name):
+	for x in range(count):
+		click.echo('Hello %s!' % name)
+
+if __name__ == '__main__':
+	main()
