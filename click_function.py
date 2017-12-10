@@ -4,9 +4,17 @@ from prettytable import *
 import click
 import json
 import os
+from linux import try_catch
 from linux.storage.phy import Phy
-from linux.storage.disk import DiskFromLsiSas3, DiskFromLsiSas2
+from linux.storage.disk import DiskFromLsiSas3, DiskFromLsiSas2, Disk
 from linux.storage.controller import Controller, LsiSas3Controller, LsiSas2Controller
+
+
+@try_catch
+def write_json_file(file_name, t_dict):
+	t_json = json.dumps(t_dict, indent=1)
+	with open((os.path.join(log_path, file_name)), 'w') as json_file:
+		json_file.write(t_json)
 
 
 def show_err_phy(ctx, param, value):
@@ -40,16 +48,16 @@ def show_err_phy(ctx, param, value):
 def show_err_disk(ctx, param, value):
 	if not value or ctx.resilient_parsing:
 		return
-	cons = Controller.get_controllers_disks_all_dict()
+	err_disks_dict = Disk.get_err_disk_dict()
+	err_disk_json = json.dumps(err_disks_dict, indent=1)
+	click.echo(err_disk_json)
 	ctx.exit()
 
 
+@try_catch
 def log_all_info(ctx, param, value):
 	phys_dict = Phy.phys_to_dict()
-	phy_json = json.dumps(phys_dict, indent=1)
 	controller_disk_dict = Controller.get_controllers_disks_all_dict()
-	controller_disk_json = json.dumps(controller_disk_dict, indent=1)
-	with open((os.path.join(log_path, "phy.json")), 'w') as json_file:
-		json_file.write(phy_json)
-		json_file.write(controller_disk_json)
+	write_json_file(os.path.join(log_path, "phy_info.json"), phys_dict)
+	write_json_file(os.path.join(log_path, "disk_info.json"), controller_disk_dict)
 	return

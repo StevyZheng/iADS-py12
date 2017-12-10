@@ -12,6 +12,14 @@ from click_function import *
 	help="Show all the error phys info."
 )
 @click.option(
+	'--show_err_disk',
+	is_flag=True,
+	callback=show_err_disk,
+	expose_value=False,
+	is_eager=True,
+	help="Show all the error disk info, like smart info, fw, model or others."
+)
+@click.option(
 	'--write_log',
 	is_flag=True,
 	callback=log_all_info,

@@ -67,12 +67,22 @@ class Disk:
 			pass
 
 	@staticmethod
-	def get_err_disk():
+	def get_err_disk_dict():
+		err_disk_dict = {}
 		disks = Disk.get_all_disk()
 		for i in disks:
-			if "SAS" in i.smart_str:
-				if Disk.__if_smart_err(i):
-					pass
+			if Disk.__if_smart_err(i):
+				struct = {
+					"dev": i.dev_name,
+					"model": i.model,
+					"fw": i.fw,
+					"SN": i.sn,
+					"type": i.type,
+					"vendor": i.vendor,
+					"smart": i.smart_attr,
+				}
+				err_disk_dict[i.dev_name] = struct
+		return err_disk_dict
 
 
 class DiskFromLsiSas3(Disk):
