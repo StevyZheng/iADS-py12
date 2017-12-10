@@ -63,6 +63,8 @@ class Disk:
 				return True
 			else:
 				return False
+		if "SATA" in disk_oj.smart_str:
+			pass
 
 	@staticmethod
 	def get_err_disk():

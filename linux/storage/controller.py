@@ -43,6 +43,32 @@ class Controller:
 		return cons
 	
 	@staticmethod
+	def get_controllers_disks_all_dict():
+		cons = Controller.scan_controller()
+		info_dict = {}
+		for c in cons:
+			c_dict = {
+				"index": c.index,
+				"model": c.model,
+				"vendor": c.vendor,
+				"fw": c.fw
+			}
+			for d in c.disks:
+				d_dict = {
+					"dev_name": d.dev_name,
+					"model": d.model,
+					"vendor": d.vendor,
+					"fw": d.fw,
+					"sn": d.sn,
+					"smart": d.smart,
+					"type": d.type,
+					"smart_attr": d.smart_attr
+				}
+				c_dict[d.dev_name] = d_dict
+			info_dict[c.index] = c_dict
+		return info_dict
+	
+	@staticmethod
 	def scan_disk_name_sn():
 		disks = linux.exe_shell("ls /dev|grep -P '^sd[a-z]+$'").splitlines()
 		disks_attr = []
