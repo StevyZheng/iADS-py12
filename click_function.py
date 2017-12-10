@@ -61,3 +61,4 @@ def log_all_info(ctx, param, value):
 	write_json_file(os.path.join(log_path, "phy_info.json"), phys_dict)
 	write_json_file(os.path.join(log_path, "disk_info.json"), controller_disk_dict)
 	return
+

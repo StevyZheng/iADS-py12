@@ -7,7 +7,7 @@ class SysInfo:
 		self.messages_err = {}
 		self.mce_err = {}
 		self.bmc_err = {}
-		self.dmesg_reg = ["error", ""]
+		self.dmesg_reg = ["error", "Call Trace", "failed", "segfault"]
 	
 	def analyze_dmesg(self):
 		pass

@@ -25,7 +25,7 @@ from click_function import *
 	callback=log_all_info,
 	expose_value=False,
 	is_eager=True,
-	help="write all the system info into json file which defind in setting file named log_path"
+	help="write all the system info into json file which defind in setting file named log_path."
 )
 def main(count, name):
 	for x in range(count):
