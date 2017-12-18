@@ -55,10 +55,14 @@ def show_err_disk(ctx, param, value):
 
 
 @try_catch
-def log_all_info(ctx, param, value):
+def log_all_info(ctx, value):
+	if not value or ctx.resilient_parsing:
+		return
 	phys_dict = Phy.phys_to_dict()
 	controller_disk_dict = Controller.get_controllers_disks_all_dict()
+	if not os.path.exists(log_path):
+		os.mkdir(log_path)
 	write_json_file(os.path.join(log_path, "phy_info.json"), phys_dict)
 	write_json_file(os.path.join(log_path, "disk_info.json"), controller_disk_dict)
-	return
+	ctx.exit()
 

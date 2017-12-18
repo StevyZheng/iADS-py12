@@ -150,6 +150,15 @@ def copy_tools():
 
 
 @try_catch
+def rm_tools():
+	exes = ["sas2ircu", "sas3ircu", "storcli", ]
+	for i in exes:
+		file_path = os.path.join("/bin", i)
+		if os.path.exists(file_path):
+			os.remove(file_path)
+
+
+@try_catch
 def zfs_install():
 	return exe_shell("cd %s/tools && ./install_zfs.sh" % get_main_path())
 

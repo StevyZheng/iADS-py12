@@ -27,9 +27,16 @@ from click_function import *
 	is_eager=True,
 	help="write all the system info into json file which defind in setting file named log_path."
 )
-def main(count, name):
-	for x in range(count):
-		click.echo('Hello %s!' % name)
+@click.option(
+	'--write_log',
+	is_flag=True,
+	callback=log_all_info,
+	expose_value=False,
+	is_eager=True,
+	help="write all the system info into json file which defind in setting file named log_path."
+)
+def main():
+	click.echo('')
 
 if __name__ == '__main__':
 	main()
