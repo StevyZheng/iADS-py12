@@ -51,19 +51,19 @@ class Disk:
 
 	@staticmethod
 	def __if_smart_err(disk_oj):
-		if "SAS" in disk_oj.smart_str:
-			if disk_oj.smart_attr["channel0Error"]["Invalid word count"] > 0 or \
-				disk_oj.smart_attr["channel0Error"]["Running disparity error count"] > 0 or \
-				disk_oj.smart_attr["channel0Error"]["Loss of dword synchronization count"] > 0 or \
-				disk_oj.smart_attr["channel0Error"]["Phy reset problem count"] > 0 or \
-				disk_oj.smart_attr["channel1Error"]["Invalid word count"] > 0 or \
-				disk_oj.smart_attr["channel1Error"]["Running disparity error count"] > 0 or \
-				disk_oj.smart_attr["channel1Error"]["Loss of dword synchronization count"] > 0 or \
-				disk_oj.smart_attr["channel1Error"]["Phy reset problem count"] > 0:
+		if "SAS" in disk_oj.smart:
+			if int(disk_oj.smart_attr["channel0Error"]["Invalid DWORD count"]) > 0 or \
+				int(disk_oj.smart_attr["channel0Error"]["Running disparity error count"]) > 0 or \
+				int(disk_oj.smart_attr["channel0Error"]["Loss of DWORD synchronization"]) > 0 or \
+				int(disk_oj.smart_attr["channel0Error"]["Phy reset problem"]) > 0 or \
+				int(disk_oj.smart_attr["channel1Error"]["Invalid DWORD count"]) > 0 or \
+				int(disk_oj.smart_attr["channel1Error"]["Running disparity error count"]) > 0 or \
+				int(disk_oj.smart_attr["channel1Error"]["Loss of DWORD synchronization"]) > 0 or \
+				int(disk_oj.smart_attr["channel1Error"]["Phy reset problem"]) > 0:
 				return True
 			else:
 				return False
-		if "SATA" in disk_oj.smart_str:
+		if "SATA" in disk_oj.smart:
 			pass
 
 	@staticmethod
@@ -106,13 +106,13 @@ class DiskFromLsiSas3(Disk):
 			for line in smart_str_arr:
 				tmp = line.split()
 				dict_tmp = {
-					"errorEccFast": tmp[1],
-					"errorEccDelayed": tmp[2],
-					"errorEccByRereadsRewrite": tmp[3],
-					"totalErrorsCorrected": tmp[4],
-					"correctionAlgorithmInvocations": tmp[5],
-					"byte10_9": tmp[6],
-					"totalUncorrectedError": tmp[7]
+					"errorEccFast": tmp[1].strip(),
+					"errorEccDelayed": tmp[2].strip(),
+					"errorEccByRereadsRewrite": tmp[3].strip(),
+					"totalErrorsCorrected": tmp[4].strip(),
+					"correctionAlgorithmInvocations": tmp[5].strip(),
+					"byte10_9": tmp[6].strip(),
+					"totalUncorrectedError": tmp[7].strip()
 				}
 				self.smart_attr[tmp[0].replace(":", " ").strip()] = dict_tmp
 			smart_str_arr = linux.search_regex_strings(
@@ -123,7 +123,7 @@ class DiskFromLsiSas3(Disk):
 			dict_tmp = {}
 			for it in smart_str_arr:
 				tmp = it.split("=")
-				dict_tmp[tmp[0]] = tmp[1]
+				dict_tmp[tmp[0].strip()] = tmp[1].strip()
 				if 3 == i:
 					self.smart_attr["channel0Error"] = dict_tmp
 				if 7 == i:
@@ -135,15 +135,15 @@ class DiskFromLsiSas3(Disk):
 			for line in dict_tmp:
 				tmp = line.split()
 				dict_tmp = {
-					"ID": tmp[0],
-					"FLAG": tmp[2],
-					"VALUE": tmp[3],
-					"WORST": tmp[4],
-					"THRESH": tmp[5],
-					"TYPE": tmp[6],
-					"UPDATED": tmp[7],
-					"WHEN_FAILED": tmp[8],
-					"RAW_VALUE": tmp[9],
+					"ID": tmp[0].strip(),
+					"FLAG": tmp[2].strip(),
+					"VALUE": tmp[3].strip(),
+					"WORST": tmp[4].strip(),
+					"THRESH": tmp[5].strip(),
+					"TYPE": tmp[6].strip(),
+					"UPDATED": tmp[7].strip(),
+					"WHEN_FAILED": tmp[8].strip(),
+					"RAW_VALUE": tmp[9].strip(),
 				}
 				self.smart_attr[tmp[1]] = dict_tmp
 
