@@ -3,8 +3,10 @@
     <words>
       <w>attrs</w>
       <w>dmesg</w>
+      <w>dmidecode</w>
       <w>hgst</w>
       <w>hrules</w>
+      <w>iads</w>
       <w>indexs</w>
       <w>keyargs</w>
       <w>lsblk</w>
