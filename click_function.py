@@ -1,13 +1,15 @@
 # coding = utf-8
-from setting import *
-from prettytable import *
-import click
 import json
 import os
+
+import click
+from prettytable import *
+
 from linux import try_catch, exe_shell
+from linux.storage.controller import Controller
+from linux.storage.disk import Disk
 from linux.storage.phy import Phy
-from linux.storage.disk import DiskFromLsiSas3, DiskFromLsiSas2, Disk
-from linux.storage.controller import Controller, LsiSas3Controller, LsiSas2Controller
+from setting import *
 
 
 def check_iads_env():

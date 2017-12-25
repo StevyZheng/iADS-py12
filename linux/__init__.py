@@ -6,6 +6,7 @@ import os
 import sys
 import shutil
 import stat
+from setting import *
 
 
 def try_catch(f):
@@ -101,13 +102,11 @@ def get_match_sub_string(src_str, reg_str):
 
 
 def read_file(filepath):
-	s_t = ""
 	if os.path.exists(filepath) and os.path.isfile(filepath):
 		with open(filepath) as fp:
 			try:
 				s_t = fp.read()
 			except Exception:
-				# print("%s is cannot read." % filepath)
 				return "-9999"
 	else:
 		print("file not exists or path is not a file!")
@@ -138,6 +137,22 @@ def path_join(path1, path2):
 def get_main_path():
 	dir_name, file_name = os.path.split(os.path.abspath(sys.argv[0]))
 	return dir_name
+
+
+def bin_exists(bin_name):
+	re = exe_shell(bin_name)
+	if "-bash:" in re:
+		return False
+	else:
+		return True
+
+
+def check_unexists_tools():
+	unexists_list = []
+	for i in check_list:
+		if not bin_exists(i):
+			unexists_list.append(i)
+	return unexists_list
 
 
 @try_catch

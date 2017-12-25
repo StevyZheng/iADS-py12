@@ -126,8 +126,10 @@ class DiskFromLsiSas3(Disk):
 				dict_tmp[tmp[0].strip()] = tmp[1].strip()
 				if 3 == i:
 					self.smart_attr["channel0Error"] = dict_tmp
+					dict_tmp = {}
 				if 7 == i:
 					self.smart_attr["channel1Error"] = dict_tmp
+					dict_tmp = {}
 				i += 1
 		if "SATA" in smart_str:
 			self.type = "SATA"

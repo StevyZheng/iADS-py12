@@ -36,9 +36,12 @@ from click_function import *
 	help="Show system's bios info."
 )
 def main():
-	click.echo("iads 1.0.0")
-	click.echo("iads require smartctl, lsscsi, lsblk, sas3ircu, sas2ircu. Please makesure these tools are installed.")
-	click.echo('Input iads --help to show help menu.')
+	require_str = "iads require smartctl, lsscsi, lsblk, sas3ircu, sas2ircu. Please makesure these tools are installed.";
+	click.echo("=" * len(require_str))
+	click.echo("\niads 1.0.0\n")
+	click.echo(require_str)
+	click.echo('\nInput iads --help to show help menu.\n')
+	click.echo("=" * len(require_str))
 
 if __name__ == '__main__':
 	main()
