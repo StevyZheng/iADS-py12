@@ -6,10 +6,6 @@ class Zfs:
 	def __init__(self):
 		self.disks = None
 
-	@staticmethod
-	def install_zfs():
-		linux.zfs_install()
-
 	def set_zfs_disks(self, disk_list):
 		counts = len(disk_list)
 		if counts > 3 and counts % 2 == 0:
