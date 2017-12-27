@@ -35,6 +35,14 @@ from click_function import *
 	is_eager=True,
 	help="Show system's bios info."
 )
+@click.option(
+	'--monitor_gpu',
+	is_flag=True,
+	callback=gpu_monitor,
+	expose_value=False,
+	is_eager=True,
+	help="Monitor all gpu temp."
+)
 def main():
 	require_str = "iads require smartctl, lsscsi, lsblk, sas3ircu, sas2ircu. Please makesure these tools are installed.";
 	click.echo("=" * len(require_str))

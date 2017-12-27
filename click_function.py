@@ -10,6 +10,8 @@ from linux.storage.controller import Controller
 from linux.storage.disk import Disk
 from linux.storage.phy import Phy
 from setting import *
+from linux.sys_info import Bmc
+import time
 
 
 def check_iads_env():
@@ -83,4 +85,13 @@ def log_all_info(ctx, param, value):
 		os.mkdir(log_path)
 	write_json_file(os.path.join(log_path, "phy_info.json"), phys_dict)
 	write_json_file(os.path.join(log_path, "disk_info.json"), controller_disk_dict)
+	ctx.exit()
+
+
+def gpu_monitor(ctx, param, value):
+	if not value or ctx.resilient_parsing:
+		return
+	while True:
+		Bmc.monitor_gpu_temp()
+		time.sleep(4)
 	ctx.exit()

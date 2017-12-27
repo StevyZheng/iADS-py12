@@ -5,6 +5,11 @@ import linux
 class Zfs:
 	def __init__(self):
 		self.disks = None
+	
+	def init_disk(self):
+		for i in self.disks:
+			linux.exe_shell("dd if=/dev/zero of=/dev/%s bs=1M count=100" % i)
+			linux.exe_shell("parted /dev/%s -s mklabel gpt" % i)
 
 	def set_zfs_disks(self, disk_list):
 		counts = len(disk_list)
