@@ -23,7 +23,7 @@ class Bmc:
 	def get_bmc_log():
 		bmc_log = exe_shell("ipmicfg -sel")
 		bmc_log_dict = {
-			'bmc_log': bmc_log
+			"bmc_log": bmc_log
 		}
 		return bmc_log_dict
 
@@ -71,12 +71,12 @@ class SysInfo:
 		sysinfo = SysInfo()
 		sysinfo.fill_attr()
 		sys_info_dict = {
-			'dmesg': sysinfo.dmesg,
-			'messages': sysinfo.messages,
-			'lsscsi': sysinfo.lsscsi,
-			'dmidecode': sysinfo.dmidecode,
-			'lspci': sysinfo.lspci,
-			'lsblk': sysinfo.lsblk
+			"dmesg": sysinfo.dmesg,
+			"messages": sysinfo.messages,
+			"lsscsi": sysinfo.lsscsi,
+			"dmidecode": sysinfo.dmidecode,
+			"lspci": sysinfo.lspci,
+			"lsblk": sysinfo.lsblk
 		}
 		return sys_info_dict
 
@@ -135,8 +135,8 @@ class Log:
 		bmc_log = Bmc.get_bmc_log()
 		sys_log = SysInfo.get_sys_log()
 		log_dict = {
-			'bmc_log': bmc_log,
-			'sys_log': sys_log
+			"bmc_log": bmc_log,
+			"sys_log": sys_log
 		}
 		return log_dict
 

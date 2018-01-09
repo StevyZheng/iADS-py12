@@ -10,7 +10,7 @@ from linux.storage.controller import Controller
 from linux.storage.disk import Disk
 from linux.storage.phy import Phy
 from setting import *
-from linux.sys_info import Bmc
+from linux.sys import Bmc
 import time
 
 

@@ -6,6 +6,7 @@ import os
 import sys
 import shutil
 import stat
+import json
 from setting import *
 
 
@@ -27,6 +28,21 @@ def try_catch(f):
 			pass
 
 	return handle_problems
+
+
+def dict_to_json(t_dict):
+	str_json = json.dumps(t_dict, indent=1)
+	return str_json
+
+
+def json_to_dict(json_file):
+	str_t = read_file(json_file)
+	return json.loads(str_t)
+
+
+def dict_to_json_file(t_dict, file_path):
+	with open(file_path, 'w') as f:
+		json.dump(t_dict, f)
 
 
 def is_string(s):
