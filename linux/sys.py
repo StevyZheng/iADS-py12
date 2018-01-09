@@ -1,5 +1,5 @@
 # coding = utf-8
-from linux import exe_shell, read_file, bin_exists, try_catch
+from linux import exe_shell, read_file, bin_exists, try_catch, dict_to_json, dict_to_json_file
 from linux.gpu.gpu_base import Gpu
 
 fan_mode = {
@@ -21,7 +21,11 @@ class Bmc:
 
 	@staticmethod
 	def get_bmc_log():
-		return exe_shell("ipmicfg -sel")
+		bmc_log = exe_shell("ipmicfg -sel")
+		bmc_log_dict = {
+			'bmc_log': bmc_log
+		}
+		return bmc_log_dict
 
 	@staticmethod
 	def get_fan_mode():
@@ -61,7 +65,6 @@ class SysInfo:
 		self.dmidecode = ""
 		self.lsblk = ""
 		self.lspci = ""
-
 
 	@staticmethod
 	def get_sys_log():
@@ -131,5 +134,18 @@ class Log:
 	def get_all_log():
 		bmc_log = Bmc.get_bmc_log()
 		sys_log = SysInfo.get_sys_log()
+		log_dict = {
+			'bmc_log': bmc_log,
+			'sys_log': sys_log
+		}
+		return log_dict
 
+	@staticmethod
+	def get_log_json():
+		t_dict = Log.get_all_log()
+		return dict_to_json(t_dict)
 
+	@staticmethod
+	def store_log_json(t_file_path):
+		t_dict = Log.get_all_log()
+		dict_to_json_file(t_dict, t_file_path)
