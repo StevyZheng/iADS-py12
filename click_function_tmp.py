@@ -10,8 +10,8 @@ from linux.storage.controller import Controller
 from linux.storage.disk import Disk
 from linux.storage.phy import Phy
 from setting import *
-from linux.sys import Bmc
 import time
+from linux.sys import *
 
 
 def check_iads_env():
@@ -76,15 +76,21 @@ def show_err_disk(ctx, param, value):
 	ctx.exit()
 
 
-def log_all_info(ctx, param, value):
+def write_all_log(ctx, param, value):
 	if not value or ctx.resilient_parsing:
 		return
+	print(ctx.params["write_all_log"])
+	return
+	log_dict = Log.get_all_log()
 	phys_dict = Phy.phys_to_dict()
 	controller_disk_dict = Controller.get_controllers_disks_all_dict()
+	t_dict = {
+		"sys_log": log_dict,
+		"phys_log": phys_dict,
+		"controller_disk_log": controller_disk_dict
+	}
 	if not os.path.exists(log_path):
 		os.mkdir(log_path)
-	write_json_file(os.path.join(log_path, "phy_info.json"), phys_dict)
-	write_json_file(os.path.join(log_path, "disk_info.json"), controller_disk_dict)
 	ctx.exit()
 
 

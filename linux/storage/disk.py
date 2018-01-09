@@ -37,10 +37,10 @@ class Disk:
 	@staticmethod
 	def get_all_disk():
 		disks = []
-		disks_lines = linux.exe_shell("lsblk -o NAME,VENDOR|grep '^sd*'")
+		disks_lines = linux.exe_shell("lsblk -o NAME,VENDOR|grep -P '^sd.*[A-Z]'")
 		for line in disks_lines.splitlines():
 			disk_t = line.split()
-			if "LSI" not in disk_t[1]:
+			if len(disk_t) < 1 and "LSI" not in disk_t[1]:
 				disks.append(disk_t[0])
 		ds = []
 		for i in disks:

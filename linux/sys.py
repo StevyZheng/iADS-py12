@@ -1,5 +1,5 @@
 # coding = utf-8
-from linux import exe_shell, read_file, bin_exists, try_catch, dict_to_json, dict_to_json_file
+from linux import *
 from linux.gpu.gpu_base import Gpu
 
 fan_mode = {
@@ -94,7 +94,6 @@ class SysInfo:
 		else:
 			raise Exception("dmesg not exists!")
 
-	@try_catch
 	def fill_messages(self):
 		self.messages = read_file("/var/log/messages")
 
