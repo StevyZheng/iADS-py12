@@ -1,5 +1,5 @@
 # coding = utf-8
-from linux import exe_shell
+from linux import exe_shell, read_file, bin_exists, try_catch
 from linux.gpu.gpu_base import Gpu
 
 fan_mode = {
@@ -18,7 +18,11 @@ class Bmc:
 	
 	def __init__(self):
 		pass
-	
+
+	@staticmethod
+	def get_bmc_log():
+		return exe_shell("ipmicfg -sel")
+
 	@staticmethod
 	def get_fan_mode():
 		return exe_shell("ipmicfg -fan | grep 'Fan Speed' | awk '{print$7}'")
@@ -51,6 +55,81 @@ class SysInfo:
 		self.mce_err = {}
 		self.bmc_err = {}
 		self.dmesg_reg = ["error", "Call Trace", "failed", "segfault", ]
-	
+		self.dmesg = ""
+		self.messages = ""
+		self.lsscsi = ""
+		self.dmidecode = ""
+		self.lsblk = ""
+		self.lspci = ""
+
+
+	@staticmethod
+	def get_sys_log():
+		sysinfo = SysInfo()
+		sysinfo.fill_attr()
+		sys_info_dict = {
+			'dmesg': sysinfo.dmesg,
+			'messages': sysinfo.messages,
+			'lsscsi': sysinfo.lsscsi,
+			'dmidecode': sysinfo.dmidecode,
+			'lspci': sysinfo.lspci,
+			'lsblk': sysinfo.lsblk
+		}
+		return sys_info_dict
+
+	def fill_attr(self):
+		self.fill_dmesg()
+		self.fill_messages()
+		self.fill_lsblk()
+		self.fill_lsscsi()
+		self.fill_lspci()
+		self.fill_dmidecode()
+
+	def fill_dmesg(self):
+		if bin_exists("dmesg"):
+			self.dmesg = exe_shell("dmesg")
+		else:
+			raise Exception("dmesg not exists!")
+
+	@try_catch
+	def fill_messages(self):
+		self.messages = read_file("/var/log/messages")
+
+	def fill_lsscsi(self):
+		if bin_exists("lsscsi"):
+			self.lsscsi = exe_shell("lsscsi")
+		else:
+			raise Exception("lsscsi not exists!")
+
+	def fill_lsblk(self):
+		if bin_exists("lsblk"):
+			self.lsblk = exe_shell("lsblk")
+		else:
+			raise Exception("lsblk not exists!")
+
+	def fill_lspci(self):
+		if bin_exists("lspci"):
+			self.lspci = exe_shell("lspci")
+		else:
+			raise Exception("lspci not exists!")
+
+	def fill_dmidecode(self):
+		if bin_exists("dmidecode"):
+			self.dmidecode = exe_shell("dmidecode")
+		else:
+			raise Exception("dmidecode is not exists!")
+
 	def analyze_dmesg(self):
 		pass
+
+
+class Log:
+	def __init__(self):
+		pass
+
+	@staticmethod
+	def get_all_log():
+		bmc_log = Bmc.get_bmc_log()
+		sys_log = SysInfo.get_sys_log()
+
+
