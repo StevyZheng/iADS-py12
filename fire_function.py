@@ -1,5 +1,5 @@
 # coding = utf-8
-from click_function_tmp import *
+from tmp.click_function_tmp import *
 
 
 class Cli(object):
