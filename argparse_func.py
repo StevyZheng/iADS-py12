@@ -1,29 +1,23 @@
 # coding = utf-8
-from linux import *
 from prettytable import *
-from linux.storage.controller import Controller
-from linux.storage.disk import Disk
 from linux.storage.phy import Phy
-import time, os
-from linux.sys import *
+from linux.sysinfo import *
+from linux import *
+from setting import help_str
 
 
-def iads_help():
-	param_dict = json_to_dict(os.path.join(get_main_path(), "param.json"))
-	print(param_dict)
+def list_dict(dict_a):
+	if isinstance(dict_a, dict):
+		for x in range(len(dict_a)):
+			temp_key = dict_a.keys()[x]
+			temp_value = dict_a[temp_key]
+			if not isinstance(temp_value, dict):
+				print("%s : %s" % (temp_key, temp_value))
+			list_dict(temp_value)
 
 
 def show_help():
-	help_str = (
-		"=" * 80,
-		"iads show",
-		"help  -->  Show this menu.",
-		"bios-info  -->  Show all BIOS info.",
-		"=" * 80
-	)
-	s = ""
-	for line in help_str:
-		s = "%s\n%s" % (s, line)
+	print(help_str)
 
 
 def show_bios_info():

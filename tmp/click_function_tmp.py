@@ -11,7 +11,7 @@ from linux.storage.disk import Disk
 from linux.storage.phy import Phy
 from setting import *
 import time
-from linux.sys import *
+from linux.sysinfo import *
 
 
 def check_iads_env():
