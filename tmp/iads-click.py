@@ -39,6 +39,19 @@ def show_err_phy():
 	click.echo(row)
 
 
+@click.command()
+@click.option(
+	'--show_err_phy',
+	help="Show all the error phys info."
+)
+def show_bios():
+	if not os.path.exists("/usr/sbin/dmidecode"):
+		print("dmidecode is not exists, please install dmidecode.")
+		return
+	dmi_info = exe_shell("dmidecode --type bios")
+	print(dmi_info)
+
+
 @click.option(
 	'--show_err_disk',
 	is_flag=True,
@@ -81,6 +94,7 @@ def mains():
 
 
 main.add_command(show_err_phy)
+main.add_command(show_bios)
 
 if __name__ == '__main__':
 	main()

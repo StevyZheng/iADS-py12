@@ -4,7 +4,9 @@
       <w>busid</w>
       <w>ircu</w>
       <w>lsscsi</w>
+      <w>makesure</w>
       <w>mklabel</w>
+      <w>prog</w>
       <w>smartctl</w>
       <w>storcli</w>
       <w>unexists</w>
