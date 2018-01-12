@@ -2,9 +2,12 @@
   <dictionary name="stevy">
     <words>
       <w>busid</w>
+      <w>ipvt</w>
       <w>ircu</w>
+      <w>linpack</w>
       <w>lsscsi</w>
       <w>makesure</w>
+      <w>malloc</w>
       <w>mklabel</w>
       <w>prog</w>
       <w>smartctl</w>

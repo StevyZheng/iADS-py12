@@ -23,8 +23,16 @@ def show_func(arg):
 	sw = arg.show_name[0]
 	if "bios-info" == sw:
 		show_bios_info()
+	elif "bios-ver" == sw:
+		show_bios_ver()
+	elif "bios-date" == sw:
+		show_bios_date()
+	elif "cpu-info" == sw:
+		show_cpu_info()
 	elif "help" == sw:
 		show_help()
+	elif "mem-model" == sw:
+		show_mem_model()
 	elif "err-phy" == sw:
 		show_err_phy()
 	elif "err-disk" == sw:
@@ -55,6 +63,21 @@ def logging_func(arg):
 logging_parser = subparsers.add_parser("logging")
 logging_parser_arg = logging_parser.add_argument('logging_name', nargs="*")
 logging_parser.set_defaults(func=logging_func)
+
+
+def run_func(arg):
+	sw = arg.run_name[0]
+	if "linpack" == sw or "paoyali" == sw:
+		if len(arg.run_name) > 1 and arg.run_name[1]:
+			run_time = arg.run_name[1]
+		else:
+			run_time = -1
+		run_linpack(run_time)
+
+
+run_parser = subparsers.add_parser("run")
+run_parser_arg = run_parser.add_argument('run_name', nargs="*")
+run_parser.set_defaults(func=run_func)
 
 
 if __name__ == '__main__':
