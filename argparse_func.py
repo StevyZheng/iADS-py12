@@ -1,9 +1,13 @@
 # coding = utf-8
 from prettytable import *
 from linux.storage.phy import Phy
+from linux.storage.controller import Controller
+from linux.storage.disk import Disk
 from linux.sysinfo import *
 from linux import *
 from setting import help_str
+import time
+import datetime
 
 
 def list_dict(dict_a):
@@ -55,3 +59,41 @@ def show_err_phy():
 			i.running_disparity_error_count
 		])
 	print(row)
+
+
+def show_err_disk():
+	err_disks_dict = Disk.get_err_disk_dict()
+	err_disk_json = json.dumps(err_disks_dict, indent=1)
+	print(err_disk_json)
+
+
+def gpu_monitor():
+	while True:
+		Bmc.monitor_gpu_temp()
+		time.sleep(4)
+
+
+def write_all_log():
+	log_dict = Log.get_all_log()
+	phys_dict = Phy.phys_to_dict()
+	controller_disk_dict = Controller.get_controllers_disks_all_dict()
+	t_dict = {
+		"get_time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+		'''BMC and sys log'''
+		"sys_log": log_dict,
+		"phys_log": phys_dict,
+		"controller_disk_log": controller_disk_dict
+	}
+	if not os.path.exists(log_path):
+		os.mkdir(log_path)
+	json_path = os.path.join(log_path, "log.json")
+	dict_to_json_file(t_dict, json_path)
+
+
+def upload_logfile_to_server():
+	json_path = os.path.join(log_path, "log.json")
+	re = exe_shell("sshpass -p 000000 scp %s root@%s:%s" % (json_path, server_ip, server_logpath))
+	if "" == re:
+		print("Upload %s success." % json_path)
+	else:
+		print("Upload failed.")
