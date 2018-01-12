@@ -14,7 +14,7 @@ help_str = ("iads 1.0.0\n"
 			"              --> err-disk -- (Show disks which have errors.)\n"
 			"     --> monitor --> gpu -- (Monitor the temperature of GPUs and adjust the speed of the fan.)\n"
 			"     --> logging --> all -- (Logging all the log.)\n"
-			"     --> logging --> upload -- (Logging all the log.)\n")
+			"     --> logging --> upload -- (Upload the log to server, only used in product line.)\n")
 
 
 class Colored(object):

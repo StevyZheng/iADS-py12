@@ -96,4 +96,4 @@ def upload_logfile_to_server():
 	if "" == re:
 		print("Upload %s success." % json_path)
 	else:
-		print("Upload failed.")
+		print("Upload failed. Cannot connect to the server!")
