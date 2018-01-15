@@ -21,10 +21,14 @@ class Bmc:
 
 	@staticmethod
 	def get_bmc_log():
-		bmc_log = exe_shell("ipmicfg -sel")
-		bmc_log_dict = {
-			"bmc_log": bmc_log
-		}
+		bmc_log_dict = {}
+		if bin_exists("ipmicfg"):
+			bmc_log = exe_shell("ipmicfg -sel")
+			bmc_log_dict = {
+				"bmc_log": bmc_log
+			}
+		else:
+			raise Exception("ipmicfg not exists!")
 		return bmc_log_dict
 
 	@staticmethod
@@ -59,8 +63,11 @@ class SysInfo:
 		self.mce_err = {}
 		self.bmc_err = {}
 		self.dmesg_reg = ["error", "Call Trace", "failed", "segfault", ]
+		self.messages_reg = ["error", "Call Trace", "failed", "segfault", ]
+		self.bmc_reg = ["error", "Call Trace", "failed", "segfault", ]
 		self.dmesg = ""
 		self.messages = ""
+		self.bmc_log = ""
 		self.lsscsi = ""
 		self.dmidecode = ""
 		self.lsblk = ""
@@ -83,6 +90,7 @@ class SysInfo:
 	def fill_attr(self):
 		self.fill_dmesg()
 		self.fill_messages()
+		self.fill_bmc_log()
 		self.fill_lsblk()
 		self.fill_lsscsi()
 		self.fill_lspci()
@@ -96,6 +104,12 @@ class SysInfo:
 
 	def fill_messages(self):
 		self.messages = read_file("/var/log/messages")
+
+	def fill_bmc_log(self):
+		if bin_exists("ipmicfg"):
+			self.bmc_log = exe_shell("ipmicfg -sel")
+		else:
+			raise Exception("ipmicfg not exists!")
 
 	def fill_lsscsi(self):
 		if bin_exists("lsscsi"):
@@ -122,7 +136,27 @@ class SysInfo:
 			raise Exception("dmidecode is not exists!")
 
 	def analyze_dmesg(self):
-		pass
+		dmesg_err_list = []
+		messages_err_list = []
+		bmc_err_list = []
+		for elem in self.dmesg_reg:
+			tmp_list = search_regex_strings(self.dmesg, ".*%s.*" % elem)
+			for i in tmp_list:
+				dmesg_err_list.append(i)
+		for elem in self.messages:
+			tmp_list = search_regex_strings(self.messages, ".*%s.*" % elem)
+			for i in tmp_list:
+				messages_err_list.append(i)
+		for elem in self.bmc_log:
+			tmp_list = search_regex_strings(self.bmc_log, ".*%s.*" % elem)
+			for i in tmp_list:
+				bmc_err_list.append(i)
+		dict_err = {
+			"dmesg": dmesg_err_list,
+			"messages": messages_err_list,
+			"bmc": bmc_err_list
+		}
+		return dict_err
 
 
 class Log:

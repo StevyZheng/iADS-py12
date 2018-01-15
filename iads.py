@@ -57,6 +57,8 @@ def logging_func(arg):
 	sw = arg.logging_name[0]
 	if "all" == sw:
 		write_all_log()
+	elif "print-err" == sw:
+		print_err_log()
 	elif "upload" == sw:
 		upload_logfile_to_server()
 

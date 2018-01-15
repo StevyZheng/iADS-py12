@@ -43,7 +43,8 @@ t_row.add_row(["iads show cpu-info", "Show CPU info."])
 t_row.add_row(["iads show err-phy", "Show phys which have error."])
 t_row.add_row(["iads show err-disk", "Show disks which have errors."])
 t_row.add_row(["iads monitor gpu", "Monitor the temperature of GPUs and adjust the speed of the fan."])
-t_row.add_row(["iads logging all", "Logging all the log."])
+t_row.add_row(["iads logging all", "Logging all the logs."])
+t_row.add_row(["iads logging print-err", "Print err logs."])
 t_row.add_row(["iads logging upload", "Upload the log to server, only used in product line."])
 t_row.add_row(["iads run linpack <minutes> \niads run paoyali <minutes>",
 				"Run python linpack cpu and memory stress program,\nno param <minutes> means that always running. o_o"
