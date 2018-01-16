@@ -75,6 +75,15 @@ def run_func(arg):
 		else:
 			run_time = -1
 		run_linpack(run_time)
+	elif "reboot" == sw:
+		if len(arg.run_name) > 1 and arg.run_name[1]:
+			run_sec = arg.run_name[1]
+			if str(run_sec).isdigit():
+				run_reboot(run_sec)
+			elif run_sec == "clean":
+				clean_reboot()
+			elif run_sec == "rm":
+				rm_reboot()
 
 
 run_parser = subparsers.add_parser("run")

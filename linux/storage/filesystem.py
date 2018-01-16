@@ -19,8 +19,11 @@ class Zfs:
 			raise Exception("disk_list len is not even number!")
 
 	def create_pool(self, pool_name, pool_level):
+		if not linux.bin_exists("zpool"):
+			print("zpool is not exists!")
+			return
 		zpool_str = "zpool create %s raidz" % pool_name
-		if "raidz-2" in pool_name:
+		if "raidz-2" in pool_level:
 			if len(self.disks) < 6:
 				raise Exception("raidz-2 request more than 6 disks!")
 			for i in self.disks[:len(self.disks)/2]:

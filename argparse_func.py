@@ -120,7 +120,6 @@ def collect_err_log():
 	disk_err_dict = Disk.get_err_disk_dict()
 	t_dict = {
 		"get_time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-		'''BMC and sys log'''
 		"sys_err_log": err_sysinfo,
 		"phys_err_log": phys_err_dict,
 		"disk_err_log": disk_err_dict
@@ -134,7 +133,6 @@ def collect_all_log():
 	disk_log = Controller.get_controllers_disks_all_dict()
 	t_dict = {
 		"get_time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-		'''BMC and sys log'''
 		"sys_log": log_dict,
 		"phys_log": phys_dict,
 		"disk_log": disk_log
@@ -209,3 +207,21 @@ def run_linpack(r_t=-1):
 			time.sleep(1)
 	else:
 		t2.join()
+
+
+def run_reboot(sec):
+	reboot(sec)
+	while True:
+		user_in = raw_input("Reboot now ?  [y/n]")
+		if "y" == user_in:
+			exe_shell("reboot")
+		elif "n" == user_in:
+			break
+
+
+def clean_reboot():
+	clean_reboot_log()
+
+
+def rm_reboot():
+	rm_reboot_t()

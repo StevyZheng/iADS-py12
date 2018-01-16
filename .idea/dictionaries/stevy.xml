@@ -9,6 +9,7 @@
       <w>makesure</w>
       <w>malloc</w>
       <w>mklabel</w>
+      <w>pkill</w>
       <w>prog</w>
       <w>smartctl</w>
       <w>storcli</w>

@@ -47,10 +47,13 @@ t_row.add_row(["iads logging all", "Logging all the logs."])
 t_row.add_row(["iads logging print-err", "Print err logs."])
 t_row.add_row(["iads logging upload", "Upload the log to server, only used in product line."])
 t_row.add_row(["iads run linpack <minutes> \niads run paoyali <minutes>",
-				"Run python linpack cpu and memory stress program,\nno param <minutes> means that always running. o_o"
-])
+				"Run python linpack cpu and memory stress program,\nno param <minutes> means that always running. o_o"])
+t_row.add_row(["iads run reboot <sec>", "Run the reboot interval <sec>."])
+t_row.add_row(["iads run reboot clean", "Clean all the reboot log."])
+t_row.add_row(["iads run reboot rm", "rm all reboot files."])
 
 help_str = ("iads 1.0.0\n"
 			"iads require dmidecode, smartctl, lsscsi, lsblk, sas3ircu, sas2ircu, ipmicfg.\n"
 			"Please makesure these tools are installed.\n\n"
 			"help menu list:")
+

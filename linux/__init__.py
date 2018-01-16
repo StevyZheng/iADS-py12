@@ -117,9 +117,9 @@ def get_match_sub_string(src_str, reg_str):
 		return re.search(reg_str, src_str).group(0)
 
 
-def read_file(filepath):
-	if os.path.exists(filepath) and os.path.isfile(filepath):
-		with open(filepath) as fp:
+def read_file(file_path):
+	if os.path.exists(file_path) and os.path.isfile(file_path):
+		with open(file_path) as fp:
 			try:
 				s_t = fp.read()
 			except Exception:
@@ -128,6 +128,18 @@ def read_file(filepath):
 		print("file not exists or path is not a file!")
 		return "-9999"
 	return s_t
+
+
+def write_file(file_path, buf):
+	if os.path.exists(file_path) and os.path.isfile(file_path):
+		with open(file_path) as fp:
+			try:
+				fp.write(buf)
+			except Exception:
+				return "-9999"
+	else:
+		print("file not exists or path is not a file!")
+		return "-9999"
 
 
 @try_catch
@@ -192,6 +204,53 @@ def rm_tools():
 @try_catch
 def zfs_install():
 	return exe_shell("cd %s/tools && ./install_zfs.sh" % get_main_path())
+
+
+@try_catch
+def reboot(sec):
+	if sec < 15:
+		print("Reboot sec is too short! Please large than 15.")
+	file_path = "/usr/local/reboot.sh"
+	reboot_count = "/var/log/reboot.count"
+	reboot_log = "/var/log/reboot.log"
+	exe_shell("echo 0 > %s" % reboot_count)
+	reboot_str_list = (
+		"#!/bin/sh\n",
+		"date_t=`date`\n",
+		"count_path=\"/var/log/reboot.count\"\n",
+		"log_path=\"/var/log/reboot.log\"\n",
+		"count=`cat $count_path`\n",
+		"echo \"reboot times: $count, date: $date_t\" >> $log_path\n",
+		"let count=count+1\n",
+		"echo $count > $count_path\n",
+		"sleep %s\n" % sec,
+		"reboot\n"
+	)
+	with open(reboot_log, "w") as fp:
+		fp.writelines(reboot_str_list)
+	exe_shell("chmod 777 %s && chmod +x /etc/rc.local" % file_path)
+	if not os.path.exists(file_path):
+		exe_shell("echo \"nohup /usr/local/reboot.sh &\" >> /etc/rc.local")
+
+
+@try_catch
+def un_reboot():
+	exe_shell("pkill reboot.sh")
+
+
+@try_catch
+def rm_reboot_t():
+	file_path = "/usr/local/reboot.sh"
+	if not os.path.exists(file_path):
+		os.remove(file_path)
+	exe_shell("sed -i '/nohup/'d /etc/rc.local")
+
+
+@try_catch
+def clean_reboot_log():
+	reboot_count = "/var/log/reboot.count"
+	reboot_log = "/var/log/reboot.log"
+	exe_shell("echo 0 > %s && echo \"\" > %s" % (reboot_count, reboot_log))
 
 
 @try_catch
