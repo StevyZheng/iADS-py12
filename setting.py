@@ -34,26 +34,30 @@ t_row.field_names =[
 ]
 t_row.align[color.red("Command")] = "l"
 t_row.align[color.red("Help text")] = "l"
-t_row.add_row(["iads show help", "Show this help menu."])
-t_row.add_row(["iads show bios-info", "Show BIOS all info."])
-t_row.add_row(["iads show bios-ver", "Show BIOS date version."])
-t_row.add_row(["iads show bios-date", "Show BIOS date date."])
-t_row.add_row(["iads show mem-model", "Show memory model."])
-t_row.add_row(["iads show cpu-info", "Show CPU info."])
-t_row.add_row(["iads show err-phy", "Show phys which have error."])
-t_row.add_row(["iads show err-disk", "Show disks which have errors."])
-t_row.add_row(["iads monitor gpu", "Monitor the temperature of GPUs and adjust the speed of the fan."])
-t_row.add_row(["iads logging all", "Logging all the logs."])
-t_row.add_row(["iads logging print-err", "Print err logs."])
-t_row.add_row(["iads logging upload", "Upload the log to server, only used in product line."])
-t_row.add_row(["iads run linpack <minutes> \niads run paoyali <minutes>",
-				"Run python linpack cpu and memory stress program,\nno param <minutes> means that always running. o_o"])
-t_row.add_row(["iads run reboot <sec>", "Run the reboot interval <sec>."])
-t_row.add_row(["iads run reboot clean", "Clean all the reboot log."])
-t_row.add_row(["iads run reboot rm", "rm all reboot files."])
+iads_help_list = (
+	["iads show help", "Show this help menu."],
+	["iads show bios-info", "Show BIOS all info."],
+	["iads show bios-ver", "Show BIOS date version."],
+	["iads show bios-date", "Show BIOS date date."],
+	["iads show mem-model", "Show memory model."],
+	["iads show cpu-info", "Show CPU info."],
+	["iads show err-phy", "Show phys which have error."],
+	["iads show err-disk", "Show disks which have errors."],
+	["iads monitor gpu", "Monitor the temperature of GPUs and adjust the speed of the fan."],
+	["iads logging all", "Logging all the logs."],
+	["iads logging print-err", "Print err logs."],
+	["iads logging upload", "Upload the log to server, only used in product line."],
+	["iads run linpack <minutes> \niads run paoyali <minutes>",
+		"Run python linpack cpu and memory stress program,\nno param <minutes> means that always running. o_o"],
+	["iads run reboot <sec>", "Run the reboot interval <sec>."],
+	["iads run reboot clean", "Clean all the reboot log."],
+	["iads run reboot rm", "rm all reboot files."],
+)
+for line in iads_help_list:
+	t_row.add_row(line)
 
 help_str = ("iads 1.0.0\n"
-			"iads require dmidecode, smartctl, lsscsi, lsblk, sas3ircu, sas2ircu, ipmicfg.\n"
+			"iads require dmidecode, smartctl, lsscsi, lsblk, sas3ircu, sas2ircu, ipmicfg, pkill.\n"
 			"Please makesure these tools are installed.\n\n"
 			"help menu list:")
 
