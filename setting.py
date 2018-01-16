@@ -51,7 +51,8 @@ iads_help_list = (
 		"Run python linpack cpu and memory stress program,\nno param <minutes> means that always running. o_o"],
 	["iads run reboot <sec>", "Run the reboot interval <sec>."],
 	["iads run reboot clean", "Clean all the reboot log."],
-	["iads run reboot rm", "rm all reboot files."],
+	["iads run reboot rm", "Remove all reboot files."],
+	["-iads zfs create-pool", "Create zpool named rpool"],
 )
 for line in iads_help_list:
 	t_row.add_row(line)

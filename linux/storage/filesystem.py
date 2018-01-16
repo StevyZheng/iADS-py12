@@ -1,11 +1,25 @@
 # coding = utf-8
 import linux
+from linux.storage.controller import Controller
 
 
 class Zfs:
 	def __init__(self):
-		self.disks = None
-	
+		self.disks = []
+
+	def scan_fill_disks(self):
+		dict_disks = Controller.get_controllers_disks_all_dict()
+		tmp_disk_list = []
+		for index in dict_disks.iterkeys():
+			for k in dict_disks[index].iterkey():
+				tmp_disk_list.append(k)
+		disk_list_size = len(tmp_disk_list)
+		if disk_list_size > 2:
+			self.disks = tmp_disk_list
+		else:
+			print("Please make disks more than 2.")
+			raise Exception("Disks are least then 2! Please add disk.")
+
 	def init_disk(self):
 		for i in self.disks:
 			linux.exe_shell("dd if=/dev/zero of=/dev/%s bs=1M count=100" % i)
@@ -23,7 +37,7 @@ class Zfs:
 			print("zpool is not exists!")
 			return
 		zpool_str = "zpool create %s raidz" % pool_name
-		if "raidz-2" in pool_level:
+		if "raidz-2" == pool_level:
 			if len(self.disks) < 6:
 				raise Exception("raidz-2 request more than 6 disks!")
 			for i in self.disks[:len(self.disks)/2]:
