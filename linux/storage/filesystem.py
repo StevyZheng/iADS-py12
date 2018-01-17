@@ -36,6 +36,7 @@ class Zfs:
 		if not linux.bin_exists("zpool"):
 			print("zpool is not exists!")
 			return
+
 		zpool_str = "zpool create %s raidz" % pool_name
 		if "raidz-2" == pool_level:
 			if len(self.disks) < 6:
