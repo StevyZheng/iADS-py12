@@ -44,6 +44,7 @@ iads_help_list = (
 	["iads show err-phy", "Show phys which have error."],
 	["iads show err-disk", "Show disks which have errors."],
 	["iads monitor gpu", "Monitor the temperature of GPUs and adjust the speed of the fan."],
+	["iads monitor log", "Monitor the logs and save lsiutils."],
 	["iads logging all", "Logging all the logs."],
 	["iads logging print-err", "Print err logs."],
 	["iads logging upload", "Upload the log to server, only used in product line."],

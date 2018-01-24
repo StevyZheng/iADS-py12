@@ -6,9 +6,9 @@ from linux.sysinfo import *
 from linux import *
 from setting import *
 import time
+import string
 import datetime
-from numpy import matrix, array, linalg, random, amax, asscalar
-import sys
+from numpy import matrix, linalg, random, amax, asscalar
 import math
 import threading
 
@@ -112,6 +112,53 @@ def gpu_monitor():
 	while True:
 		Bmc.monitor_gpu_temp()
 		time.sleep(4)
+
+
+@try_catch
+def write_a(file_t, str_t):
+	with open(file_t, "a") as fp:
+		fp.write(str_t)
+
+
+def log_monitor():
+	log_path = "/var/log/iads-monitor-log.log"
+	i_times = 0
+	phy_t_list = Phy.scan_phys_attr()
+	collect = False
+	while True:
+		g_lsi_str = exe_shell("lsiutil.x86_64_171  -p  1  -a  64,1,,debuginfo,exit,0")
+		dmesg_str = exe_shell("dmesg|grep -iP '((i/o error)|(sector [0-9]+))'")
+		phy_list = Phy.scan_phys_attr()
+		for i in range(0, len(phy_list)):
+			if len(phy_t_list) != len(phy_list):
+				collect = True
+				print("phy is not eq!")
+				continue
+			if phy_list[i].invalid_dword_count != phy_t_list[i].invalid_dword_count or phy_list[
+				i].loss_of_dword_sync_count != phy_t_list[i].loss_of_dword_sync_count:
+				collect = True
+			if phy_list[i].phy_reset_problem_count != phy_t_list[i].phy_reset_problem_count or phy_list[
+				i].running_disparity_error_count != phy_t_list[i].running_disparity_error_count:
+				collect = True
+		if not collect:
+			continue
+		print("Phy err increased.Start collect logs to /var/log/iads-monitor-log.log......")
+		phy_t_list = phy_list
+
+		messages_str = exe_shell("cat /var/log/messages|grep -iP '((i/o error)|(sector [0-9]+))'")
+		i_times += 1
+		time_t = exe_shell("date")
+		lsi_str = exe_shell("lsiutil.x86_64_171  -p  1  -a  64,1,,debuginfo,exit,0")
+		tmp_str = "\n%s\ndmesg:\n%s\nmessages:\n%s\nbefore_lsi_str:\n%s\nafter_lsi_str:\n%s\n" % (
+		time_t, dmesg_str, messages_str, g_lsi_str, lsi_str)
+		with open("/var/log/iads-monitor-log.log", "a") as fp:
+			fp.write(tmp_str)
+			fp.writelines("\n\n\nsmart info:\n")
+
+		for case in ("", "a", "b", ):
+			for i in string.lowercase:
+				exe_shell("smartctl -x /dev/sd%s%s >> /var/log/iads-monitor-log.log" % (case, i))
+				write_a(log_path, "\n\n")
 
 
 def collect_err_log():

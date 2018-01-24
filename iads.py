@@ -46,7 +46,9 @@ show_parser.set_defaults(func=show_func)
 def monitor_func(arg):
 	sw = arg.monitor_name[0]
 	if "gpu" == sw:
-		Bmc.monitor_gpu_temp()
+		gpu_monitor()
+	elif "log" == sw:
+		log_monitor()
 
 monitor_parser = subparsers.add_parser("monitor")
 monitor_parser_arg = monitor_parser.add_argument('monitor_name', nargs="*")
