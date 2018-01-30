@@ -121,18 +121,30 @@ def write_a(file_t, str_t):
 
 
 def log_monitor():
+	start_log_path = "/var/log/start-iads-monitor-log.log"
 	log_path = "/var/log/iads-monitor-log.log"
+	start_time_t = exe_shell("date")
+
+	start_lsi_str = exe_shell("lsiutil.x86_64_171  -p  1  -a  64,1,,debuginfo,exit,0")
+	start_hba_str = exe_shell("lsiutil.x86_64_171  -p  1  -a  65,,'pl dbg',exit,0")
+	start_dmesg_str = exe_shell("dmesg|grep -iP '((i/o error)|(sector [0-9]+))'")
+	start_messages_str = exe_shell("cat /var/log/messages|grep -iP '((i/o error)|(sector [0-9]+))'")
+	start_str = "\ntime:\n%s\ndmesg:\n%s\n\nmessage:\n%s\n\nlsiutils debuginfo:\n%s\n\nlsiutils_pl dbg:\n%s\n\n" % (start_time_t, start_dmesg_str, start_messages_str, start_lsi_str, start_hba_str)
+	with open(start_log_path, "a") as fp:
+		fp.write(start_str)
+	print("Start_log is OK. path: /var/log/start-iads-monitor-log.log \n")
+
 	i_times = 0
 	phy_t_list = Phy.scan_phys_attr()
 	collect = False
 	while True:
 		g_lsi_str = exe_shell("lsiutil.x86_64_171  -p  1  -a  64,1,,debuginfo,exit,0")
+		g_hba_str = exe_shell("lsiutil.x86_64_171  -p  1  -a  65,,'pl dbg',exit,0")
 		dmesg_str = exe_shell("dmesg|grep -iP '((i/o error)|(sector [0-9]+))'")
 		phy_list = Phy.scan_phys_attr()
 		for i in range(0, len(phy_list)):
 			if len(phy_t_list) != len(phy_list):
 				collect = True
-				print("phy is not eq!")
 				continue
 			if phy_list[i].invalid_dword_count != phy_t_list[i].invalid_dword_count or phy_list[
 				i].loss_of_dword_sync_count != phy_t_list[i].loss_of_dword_sync_count:
@@ -149,16 +161,18 @@ def log_monitor():
 		i_times += 1
 		time_t = exe_shell("date")
 		lsi_str = exe_shell("lsiutil.x86_64_171  -p  1  -a  64,1,,debuginfo,exit,0")
-		tmp_str = "\n%s\ndmesg:\n%s\nmessages:\n%s\nbefore_lsi_str:\n%s\nafter_lsi_str:\n%s\n" % (
-		time_t, dmesg_str, messages_str, g_lsi_str, lsi_str)
-		with open("/var/log/iads-monitor-log.log", "a") as fp:
+		hba_str = exe_shell("lsiutil.x86_64_171  -p  1  -a  65,,'pl dbg',exit,0")
+		tmp_str = "\n%s\ndmesg:\n%s\nmessages:\n%s\nbefore_lsi_str:\n%s\nafter_lsi_str:\n%s\nbefore_hba_lig:\n%s\nafter_hba_log:\n%s\n" % (
+		time_t, dmesg_str, messages_str, g_lsi_str, lsi_str, g_hba_str, hba_str)
+		with open(log_path, "a") as fp:
 			fp.write(tmp_str)
 			fp.writelines("\n\n\nsmart info:\n")
-
 		for case in ("", "a", "b", ):
 			for i in string.lowercase:
+				write_a(log_path, "\nsd%s%s\n" % (case, i))
 				exe_shell("smartctl -x /dev/sd%s%s >> /var/log/iads-monitor-log.log" % (case, i))
-				write_a(log_path, "\n\n")
+		exe_shell("lsigetlunix.sh")
+		break
 
 
 def collect_err_log():
