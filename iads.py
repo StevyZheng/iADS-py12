@@ -12,9 +12,9 @@ def iads_func(arg):
 parser = argparse.ArgumentParser(
 	prog="iads",
 	usage="%(prog)s [options]",
-	description="iads 1.0.0, cli tool for roycom." \
-	" iads require dmidecode, smartctl, lsscsi, lsblk, sas3ircu, sas2ircu, ipmicfg." \
-	" Please makesure these tools are installed.",
+	description='iads 1.0.0, cli tool for roycom.' \
+	            ' iads require dmidecode, smartctl, lsscsi, lsblk, sas3ircu, sas2ircu, ipmicfg.' \
+	            ' Please makesure these tools are installed.',
 )
 subparsers = parser.add_subparsers(help="iads params")
 
@@ -38,6 +38,7 @@ def show_func(arg):
 	elif "err-disk" == sw:
 		show_err_disk()
 
+
 show_parser = subparsers.add_parser("show")
 show_parser_arg = show_parser.add_argument('show_name', nargs="*")
 show_parser.set_defaults(func=show_func)
@@ -49,6 +50,7 @@ def monitor_func(arg):
 		gpu_monitor()
 	elif "log" == sw:
 		log_monitor()
+
 
 monitor_parser = subparsers.add_parser("monitor")
 monitor_parser_arg = monitor_parser.add_argument('monitor_name', nargs="*")
@@ -63,6 +65,7 @@ def logging_func(arg):
 		print_err_log()
 	elif "upload" == sw:
 		upload_logfile_to_server()
+
 
 logging_parser = subparsers.add_parser("logging")
 logging_parser_arg = logging_parser.add_argument('logging_name', nargs="*")
@@ -91,7 +94,6 @@ def run_func(arg):
 run_parser = subparsers.add_parser("run")
 run_parser_arg = run_parser.add_argument('run_name', nargs="*")
 run_parser.set_defaults(func=run_func)
-
 
 if __name__ == '__main__':
 	args = parser.parse_args()

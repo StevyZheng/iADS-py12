@@ -1,20 +1,21 @@
 <component name="ProjectDictionaryState">
-  <dictionary name="stevy">
+  <dictionary name="Stevy">
     <words>
-      <w>busid</w>
-      <w>ipvt</w>
-      <w>ircu</w>
-      <w>linpack</w>
-      <w>lsscsi</w>
-      <w>makesure</w>
-      <w>malloc</w>
-      <w>mklabel</w>
-      <w>paoyali</w>
-      <w>pkill</w>
-      <w>prog</w>
-      <w>smartctl</w>
-      <w>storcli</w>
-      <w>unexists</w>
+      <w>attrs</w>
+      <w>dmesg</w>
+      <w>dmidecode</w>
+      <w>hgst</w>
+      <w>hrules</w>
+      <w>iads</w>
+      <w>indexs</w>
+      <w>keyargs</w>
+      <w>lsblk</w>
+      <w>nvidia</w>
+      <w>raidz</w>
+      <w>smartx</w>
+      <w>struct</w>
+      <w>vrules</w>
+      <w>zpool</w>
     </words>
   </dictionary>
 </component>

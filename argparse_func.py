@@ -29,7 +29,7 @@ def show_help():
 
 
 def show_bios_info():
-	'''show server's bios info.'''
+	"""show server's bios info."""
 	if not os.path.exists("/usr/sbin/dmidecode"):
 		print("dmidecode is not exists, please install dmidecode.")
 		return
